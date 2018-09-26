@@ -1,6 +1,6 @@
 Hello there.
 
---gif fun with numpy and pil (featuring imageio)--
+--gif fun with numpy and pillow (featuring imageio)--
 
 TO-DO
 - allow user to provide images to be converted into a gif
@@ -13,10 +13,19 @@ TO-DO
     - methods that don't require saving the images then appending the image to the gif
 
 VERSION 0.1 (9.26.18 PM)
-    - Program generates 30 images of psuedo-random noise images using numpy for the arrays and PIL to convert the random arrays to .png format. 
+    - Program generates 30 images of psuedo-random noise images using numpy for the arrays and pillow to convert the random arrays to .png format. 
     - Program also creates a gif with each of the 30 images being a frame of the gif. Order of the frames is order the images were created, e.g. initial frame was first image created, last frame was the 30th image created.
     - Time to create 30 frame, 1024x1024, gif is about 44 seconds.
 
+REQUIREMENTS
+    - Libraries needed:
+        - numpy
+        - pillow
+        - imageio
+    - Use pip if on Linux
+    - Manually download and set paths if on Windows 
+        - There is probably a better way but idk dude
+
 PURPOSE
-    The purpose of this repository is to practice python while becoming more familiar with the numpy and PIL libraries. I also hope for the project to become an exercise in other topics and areas of interest as well[, like linear algebra and possibly metaheuristic algorithms].
+    The purpose of this repository is to practice python while becoming more familiar with the numpy and pillow libraries. I also hope for the project to become an exercise in other topics and areas of interest as well[, like linear algebra and possibly metaheuristic algorithms].
 

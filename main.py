@@ -4,22 +4,27 @@ import imageio as imio # For appending images together to form an animated gif
 import time # For timing how long entire program takes to execute
 
 def main():
+    rando_n_frames_gif( int(input("Number of frames of the gif:\n")), str(input("Name of gif: ")+'.gif'))
+    get_to_image(str(input("File name to image-morph to(include file extension):")))
+
+def rando_n_frames_gif(num_frames, gif_name):
     # variables for frame creation and writing, as well as gif creation and writing
-    w, h = 1024,1024
-    all_images = []
-    total_num_frames = 30
-    frame_extension = '.png'
-    gif_location = 'rando.gif'
-    
-    # creation of frames and appending frames to the gif
-    with imio.get_writer( gif_location , mode='I') as writer:
-        for i in range( total_num_frames):
-            file_path = str(i)+frame_extension
-            Image.fromarray(
-                (np.random.rand( w, h, 3)*255).astype( 
-                    np.int8 ) ,'RGB').save(
-                        file_path, 'PNG')
-            writer.append_data(imio.imread(file_path ))
+    frames = [None] * num_frames
+    for i in range(num_frames):
+        frames[i] = (np.random.rand(side_size(), side_size(), 3)*255).astype(np.uint8)
+    imio.mimsave(gif_name, frames, 'GIF', duration=0.0833)
+
+def get_to_image(file_name):
+    target = imio.imread(file_name)
+
+def side_size():
+    return 1024
+
+def gif_location():
+    return 'rando.gif'
+
+def frame_extension():
+    return '.png'
 
 start_time = time.time()
 main()

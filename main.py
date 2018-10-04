@@ -2,29 +2,33 @@ import numpy as np # For array functions and such
 from PIL import Image # For creation of images
 import imageio as imio # For appending images together to form an animated gif
 import time # For timing how long entire program takes to execute
+import variable_function.py
+
 
 def main():
     rando_n_frames_gif( int(input("Number of frames of the gif:\n")), str(input("Name of gif: ")+'.gif'))
-    get_to_image(str(input("File name to image-morph to(include file extension):")))
 
 def rando_n_frames_gif(num_frames, gif_name):
+
     # variables for frame creation and writing, as well as gif creation and writing
     frames = [None] * num_frames
     for i in range(num_frames):
         frames[i] = (np.random.rand(side_size(), side_size(), 3)*255).astype(np.uint8)
     imio.mimsave(gif_name, frames, 'GIF', duration=0.0833)
 
-def get_to_image(file_name):
-    target = imio.imread(file_name)
+def pic_to_desired(start_image, target_image):
+    pass    
 
-def side_size():
-    return 1024
+def rando_to_desired(target_image):
+    pic_to_desired(
+            Image.fromarray( 
+                np.random.rand(target_image.size[0], target_image.size[1]), 3 ), 'RGB')
 
-def gif_location():
-    return 'rando.gif'
-
-def frame_extension():
-    return '.png'
+'''
+    Checks the similarity between two images
+'''
+def check_similarity(image_1, image_2):
+    seed = (np.random.random()*10) %
 
 start_time = time.time()
 main()

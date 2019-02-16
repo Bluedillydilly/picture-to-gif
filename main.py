@@ -21,10 +21,11 @@ def main_testing():
     Mode for testing.
     """
     print("Testing mode entered.")
-    rando_n_frames_gif(user_frames(), user_file_name())
+    frames = user_frames()
+    start_time = time.time()
+    rando_n_frames_gif(frames, user_file_name())
+    print("Time to complete: {}".format(time.time()-start_time))
 
 
-start_time = time.time()
 #main()
 main_testing()
-print("Time to complete: {}".format(time.time()-start_time))

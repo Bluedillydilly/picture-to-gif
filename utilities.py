@@ -1,5 +1,5 @@
 """
-    Utility functions used in other modules.
+Utility functions used in other modules.
 """
 from numpy import random, uint8
 

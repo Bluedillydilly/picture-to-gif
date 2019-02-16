@@ -3,10 +3,10 @@
 """
 
 import cv2 as cv
-from numpy import random, uint8, full, multiply # For array functions and such
+from numpy import random, uint8, full, multiply, add # For array functions and such
 from PIL import Image # For creation of images
 import imageio as imio # For appending images together to form an animated gif
-import similarity_check as simc
+from similarity_check import check_similarity
 from utilities import *
 
 def rando_n_frames_gif(num_frames, gif_name):
@@ -25,22 +25,26 @@ def rando_n_frames_gif(num_frames, gif_name):
 def pic_to_desired(start_image, target_image):
     """
     adds random noise multiples to the start_image.
-    Does this i times to reach a target similarity to target_image
+    Does this i times to reach a target similarity to target_image.
+    @param start_img image to start the transition from. Opened via cv.imread()
+    @param target_image The target image for start_img to reach. Opened via cv.imread()
     """
     i = 0 #iterations
-    s_img = cv.imread()
-    (width, height) = (Image.open(start_image).size[0], Image.open(start_image).size[1])
-    scalar = full((width, height, 3), 1)
-    transition = [start_arr]
-    sim_changes = [simc.check_similarity(Image.fromarray(start_array, 'RGB'), target_image)]
-    while simc.check_similarity(Image.fromarray(start_array, 'RGB'),
-                                target_image) < min_similarity():
+    current_img = cv.imread(start_image) # opens start_image
+    target_img = cv.imread(target_image)
+    (height, width) = current_img.shape[:2] # get height and width of the image
+    scalar = full((width, height, 3), 1) # initalize to all 1s
+    transition = [current_img]
+    sim_changes = [check_similarity(current_img, target_img)]
+    while check_similarity(current_img, target_img) < min_similarity():
         i += 1
-        start_array += multiply(scalar, (random.rand(width, height, 3)*255).astype(uint8))
-        transition.append(start_array)
-        current_sim = simc.check_similarity(Image.fromarray(start_array, 'RGB'), target_image)
+        current_img = add(current_img,
+                          multiply(scalar,
+                                   (random.rand(width, height, 3)*255).astype(uint8)))
+        transition.append(current_img)
+        current_sim = check_similarity(current_img, target_image)
         sim_changes.append(current_sim)
-        change_scalar(scalar, transition[i-1], start_array, cv.imread(target_image, 'RGB'))
+        change_scalar(scalar, transition[i-1], current_img, target_img)
 
 def change_scalar(scalar, previous, current, target):
     """

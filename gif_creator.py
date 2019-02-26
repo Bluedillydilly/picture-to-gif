@@ -3,7 +3,7 @@
 """
 
 import cv2 as cv
-from numpy import random, uint8, full, multiply, add # For array functions and such
+from numpy import random, uint8, full, multiply, add, subtract, sum # For array functions and such
 from PIL import Image # For creation of images
 import imageio as imio # For appending images together to form an animated gif
 from similarity_check import check_similarity
@@ -35,27 +35,28 @@ def pic_to_desired(start_image, target_image):
     (height, width) = current_img.shape[:2] # get height and width of the image
     scalar = full((width, height, 3), 1) # initalize to all 1s
     transition = [current_img]
-    sim_changes = [check_similarity(current_img, target_img)]
+    current_changes = [check_similarity(current_img, target_img)]
     while check_similarity(current_img, target_img) < min_similarity():
-        i += 1
         current_img = add(current_img,
                           multiply(scalar,
                                    (random.rand(width, height, 3)*255).astype(uint8)))
         transition.append(current_img)
         current_sim = check_similarity(current_img, target_image)
-        sim_changes.append(current_sim)
+        print(current_sim)
+        current_changes.append(current_sim)
         change_scalar(scalar, transition[i-1], current_img, target_img)
+        i += 1
+        if i > 50:
+            break;
+    imio.mimsave("near_target.gif", transition, 'GIF', duration=desired_gif_fps(10))
 
 def change_scalar(scalar, previous, current, target):
     """
     Changes scalar vector
     """
-    for i in scalar.shape[0]:
-        for j in scalar.shape[1]:
-            for value in scalar.shape[2]:
-                change = current[i][j][value] - previous[i][j][value]
-                #min(target[i][j][value]-current[i][j][value], target[i][j][value]-previous[i][j][value])
-
+    change = subtract(current, previous)
+    
+        
 
 
 def rando_to_desired(target):

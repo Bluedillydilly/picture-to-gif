@@ -3,8 +3,8 @@
 """
 
 import cv2 as cv
-from PIL import Image
 import utilities as var
+from numpy import subtract, multiply, ones, zeros, matrix, sum
 
 def check_similarity(image_1, image_2):
     """
@@ -16,7 +16,7 @@ def check_similarity(image_1, image_2):
     percent_similar = histogram_method(image_1, image_2)
     return percent_similar
 
-def histogram_method(image_1, image_2):
+def histogram_method(arr_1, arr_2):
     """
         Checks how similar two images are by comparing their histogram color distributions are.
         Images don't have to be same size.
@@ -24,14 +24,30 @@ def histogram_method(image_1, image_2):
         1 = 100% match between the two pictures. Images are effectively the same
         0 = 0% match between the two pictures
     """
-    h1 = cv.calcHist(cv.imread(image_1), [0], None, [256], [0, 256])
-    h2 = cv.calcHist(cv.imread(image_2), [0], None, [256], [0, 256])
-    compare_value = cv.compareHist(h1, h2, 0)
+    
+    blue1 = cv.calcHist([arr_1], [0], None, [256], [0, 256])
+    blue2 = cv.calcHist([arr_2], [0], None, [256], [0, 256])
+    compare_value = [cv.compareHist(blue1, blue2, 0), 0, 0]
+
+    green1 = cv.calcHist([arr_1], [1], None, [256], [0, 256])
+    green2 = cv.calcHist([arr_2], [1], None, [256], [0, 256])
+    compare_value[1] = cv.compareHist(green1, green2, 0)
+
+    red1 = cv.calcHist([arr_1], [2], None, [256], [0, 256])
+    red2 = cv.calcHist([arr_2], [2], None, [256], [0, 256])
+    compare_value[2] = cv.compareHist(red1, red2, 0)
 
     decimal_places = 2
     factor = 10 ** decimal_places
-    percent_similar = round(compare_value*factor)/factor
+    percent_similar = sum(compare_value)/3
     return percent_similar
+    
+def diff_s(arr_1, arr_2):
+    diff = subtract(arr_1, arr_2)
+    diff_square = multiply(diff, diff)
+    diff_square_sum = sum(diff_square)
+    max_value = 256*256*256*3*arr_1.size
+    return diff_square_sum / max_value
 
 def pixel_by_pixel(image_1, image_2):
     """
@@ -42,10 +58,7 @@ def pixel_by_pixel(image_1, image_2):
         Is this really need? WIP
 
     """
-    for col in range(Image.open(image_2).size[0]):
-        for row in range(Image.open(image_2).size[1]):
-            col+row
-
+    pass
 
 def test():
     """
@@ -53,7 +66,7 @@ def test():
     """
     pic_one = "1.png"
     pic_two = "2.png"
-    percent_sim = check_similarity(pic_one, pic_two)
+    percent_sim = histogram_method(cv.imread(pic_one), cv.imread(pic_two))
     print(percent_sim)
 
 test()
